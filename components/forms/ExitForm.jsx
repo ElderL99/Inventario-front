@@ -26,38 +26,44 @@ export default function ExitForm({ onSuccess }) {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = async e => {
-    e.preventDefault()
-    setError('')
-    setSuccess('')
+ const handleSubmit = async e => {
+  e.preventDefault()
+  setError('')
+  setSuccess('')
 
-    if (!form.productId || !form.quantity) {
-      return setError('Producto y cantidad son obligatorios')
-    }
-
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/exits`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          productId: form.productId,
-          quantity: parseInt(form.quantity),
-          note: form.note,
-        }),
-      })
-
-      if (!res.ok) throw new Error('Error al registrar salida')
-
-      setSuccess('✅ Salida registrada correctamente')
-      setForm({ productId: '', quantity: '', note: '' })
-      if (onSuccess) onSuccess()
-    } catch (err) {
-      setError(err.message)
-    }
+  if (!form.productId || !form.quantity) {
+    return setError('Producto y cantidad son obligatorios')
   }
+
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/exits`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        productId: form.productId,
+        quantity: parseInt(form.quantity),
+        note: form.note,
+      }),
+    })
+
+    if (!res.ok) {
+      const data = await res.json()
+      throw new Error(data.message || 'Error al registrar salida')
+    }
+
+    setSuccess('✅ Salida registrada correctamente')
+    setForm({ productId: '', quantity: '', note: '' })
+    if (onSuccess) onSuccess()
+  } catch (err) {
+    setError(err.message)
+  }
+}
+
+
+
 
 
   return (
