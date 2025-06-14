@@ -45,8 +45,12 @@ export default function ProductForm({ onSuccess, product }) {
 
     const body = {
       ...form,
+      category: form.category.trim().toLowerCase(),
       quantity: parseInt(form.quantity),
+      status: 'disponible',
     }
+
+
 
     const url = isEdit
       ? `${process.env.NEXT_PUBLIC_API_URL}/api/products/${product._id}`

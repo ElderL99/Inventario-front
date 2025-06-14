@@ -7,6 +7,8 @@ import { Pencil, Trash2 } from 'lucide-react'
 export default function ProductTable() {
   const { token, user } = useAuth()
   const isAdmin = user?.role === 'admin'
+  const [searchTerm, setSearchTerm] = useState('')
+  const [category, setCategory] = useState('')
 
   const [productos, setProductos] = useState([])
   const [showForm, setShowForm] = useState(false)
@@ -14,15 +16,19 @@ export default function ProductTable() {
   const [error, setError] = useState('')
 
   const fetchProducts = () => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(res => res.json())
-      .then(data => setProductos(data))
-      .catch(() => setError('Error al cargar productos'))
-  }
+  const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/api/products/search`)
+  if (searchTerm) url.searchParams.append('name', searchTerm)
+  if (category) url.searchParams.append('category', category)
+
+  fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then(res => res.json())
+    .then(data => setProductos(data))
+    .catch(() => setError('Error al cargar productos'))
+}
 
   const handleEdit = (product) => {
     setEditingProduct(product)
@@ -68,6 +74,29 @@ export default function ProductTable() {
           </button>
         )}
       </div>
+      <div className="flex flex-wrap gap-2 mb-4">
+  <input
+    type="text"
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+    placeholder="Buscar por nombre"
+    className="bg-[#1e1e1e] p-2 rounded border border-gray-700 text-sm"
+  />
+  <input
+    type="text"
+    value={category}
+    onChange={(e) => setCategory(e.target.value)}
+    placeholder="Categoría"
+    className="bg-[#1e1e1e] p-2 rounded border border-gray-700 text-sm"
+  />
+  <button
+    onClick={fetchProducts}
+    className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded text-sm"
+  >
+    Buscar
+  </button>
+</div>
+
 
       {showForm && isAdmin && (
         <div className="mb-6">
