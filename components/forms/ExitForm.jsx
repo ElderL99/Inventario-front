@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/context/AuthContext'
 
-export default function EntryForm({ onSuccess }) {
+export default function ExitForm({ onSuccess }) {
   const { token } = useAuth()
   const [products, setProducts] = useState([])
   const [form, setForm] = useState({ productId: '', quantity: '', note: '' })
@@ -14,8 +14,11 @@ export default function EntryForm({ onSuccess }) {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
-      .then(setProducts)
-      
+      .then(data => {
+  const disponibles = data.filter(p => p.quantity > 0)
+  setProducts(disponibles)
+})
+
       .catch(() => setError('Error al cargar productos'))
   }, [token])
 
@@ -23,7 +26,7 @@ export default function EntryForm({ onSuccess }) {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
-const handleSubmit = async e => {
+ const handleSubmit = async e => {
   e.preventDefault()
   setError('')
   setSuccess('')
@@ -33,7 +36,7 @@ const handleSubmit = async e => {
   }
 
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/entries`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/exits`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -46,9 +49,9 @@ const handleSubmit = async e => {
       }),
     })
 
-    if (!res.ok) throw new Error('Error al registrar entrada')
+    if (!res.ok) throw new Error('Error al registrar salida')
 
-    setSuccess('✅ LA entrada registrada correctamente')
+    setSuccess('✅ Salida registrada correctamente')
     setForm({ productId: '', quantity: '', note: '' })
     if (onSuccess) onSuccess()
   } catch (err) {
@@ -91,9 +94,9 @@ const handleSubmit = async e => {
 
       <button
         type="submit"
-        className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-white"
+        className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-white font-medium"
       >
-        Registrar Entrada
+        Registrar salida
       </button>
 
       {error && <p className="text-red-500">{error}</p>}
