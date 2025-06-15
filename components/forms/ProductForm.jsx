@@ -16,7 +16,6 @@ export default function ProductForm({ onSuccess, product }) {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
-  // Prellenar campos si estamos editando
   useEffect(() => {
     if (isEdit) {
       setForm({
@@ -49,8 +48,6 @@ export default function ProductForm({ onSuccess, product }) {
       quantity: parseInt(form.quantity),
       status: 'disponible',
     }
-
-
 
     const url = isEdit
       ? `${process.env.NEXT_PUBLIC_API_URL}/api/products/${product._id}`
@@ -121,6 +118,7 @@ export default function ProductForm({ onSuccess, product }) {
         className="w-full bg-[#1e1e1e] p-2 rounded border border-gray-700"
         required
       />
+
       <button
         type="submit"
         className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white font-medium"
