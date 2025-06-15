@@ -32,7 +32,7 @@ export default function EntradasPage() {
 
 
   return (
-    <div className="p-4 text-white">
+    <div className="p-4 w-full h-full text-white">
       <h1 className="text-2xl font-bold mb-4">Registrar entrada</h1>
       <EntryForm onSuccess={handleSuccess} />
 

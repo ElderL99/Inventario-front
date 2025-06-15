@@ -17,10 +17,10 @@ export default function DashboardLayout({ children }) {
   if (loading || !token) return null
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-[#1a1a1a] overflow-x-hidden">
       <Sidebar />
-      <main className="flex-1 bg-[#1a1a1a] text-white p-6">
-        {children}
+      <main className="flex-1 w-full px-4 py-6 text-white md:px-8 lg:px-12 bg-[#1a1a1a]">
+        <div className="max-w-6xl mx-auto space-y-6">{children}</div>
       </main>
     </div>
   )

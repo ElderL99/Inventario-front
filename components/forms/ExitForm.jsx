@@ -11,84 +11,86 @@ export default function ExitForm({ onSuccess }) {
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`, {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     })
-      .then(res => res.json())
-      .then(data => {
-        const disponibles = data.filter(p => p.quantity > 0)
+      .then((res) => res.json())
+      .then((data) => {
+        const disponibles = data.filter((p) => p.quantity > 0)
         setProducts(disponibles)
       })
-
       .catch(() => setError('Error al cargar productos'))
   }, [token])
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
- const handleSubmit = async e => {
-  e.preventDefault()
-  setError('')
-  setSuccess('')
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setError('')
+    setSuccess('')
 
-  if (!form.productId || !form.quantity) {
-    return setError('Producto y cantidad son obligatorios')
-  }
-
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/exits`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        productId: form.productId,
-        quantity: parseInt(form.quantity),
-        note: form.note,
-      }),
-    })
-
-    if (!res.ok) {
-      const data = await res.json()
-      throw new Error(data.message || 'Error al registrar salida')
+    if (!form.productId || !form.quantity) {
+      return setError('Producto y cantidad son obligatorios')
     }
 
-    setSuccess('✅ Salida registrada correctamente')
-    setForm({ productId: '', quantity: '', note: '' })
-    if (onSuccess) onSuccess()
-  } catch (err) {
-    setError(err.message)
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/exits`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          productId: form.productId,
+          quantity: parseInt(form.quantity),
+          note: form.note,
+        }),
+      })
+
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.message || 'Error al registrar salida')
+      }
+
+      setSuccess('✅ Salida registrada correctamente')
+      setForm({ productId: '', quantity: '', note: '' })
+      if (onSuccess) onSuccess()
+    } catch (err) {
+      setError(err.message)
+    }
   }
-}
-
-
-
-
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3 text-sm">
-      <select
-        name="productId"
-        value={form.productId}
-        onChange={handleChange}
-        className="w-full bg-[#1e1e1e] p-2 rounded border border-gray-700"
-      >
-        <option value="">Selecciona un producto</option>
-        {products.map(p => (
-          <option key={p._id} value={p._id}>{p.name}</option>
-        ))}
-      </select>
+    <form
+      onSubmit={handleSubmit}
+      className="bg-[#222] p-6 rounded-lg shadow-md space-y-4 text-white"
+    >
+      <div className="grid grid-cols-1 sm:grid-cols-1 gap-4">
+        <select
+          name="productId"
+          value={form.productId}
+          onChange={handleChange}
+          className="bg-[#1e1e1e] p-2 rounded border border-gray-700"
+        >
+          <option value="">Selecciona un producto</option>
+          {products.map((p) => (
+            <option key={p._id} value={p._id}>
+              {p.name}
+            </option>
+          ))}
+        </select>
 
-      <input
-        name="quantity"
-        type="number"
-        min="1"
-        value={form.quantity}
-        onChange={handleChange}
-        placeholder="Cantidad"
-        className="w-full bg-[#1e1e1e] p-2 rounded border border-gray-700"
-      />
+        <input
+          name="quantity"
+          type="number"
+          min="1"
+          value={form.quantity}
+          onChange={handleChange}
+          placeholder="Cantidad"
+          className="bg-[#1e1e1e] p-2 rounded border border-gray-700"
+        />
+      </div>
 
       <input
         name="note"
@@ -98,15 +100,17 @@ export default function ExitForm({ onSuccess }) {
         className="w-full bg-[#1e1e1e] p-2 rounded border border-gray-700"
       />
 
-      <button
-        type="submit"
-        className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-white font-medium"
-      >
-        Registrar salida
-      </button>
+      <div className="flex justify-end">
+        <button
+          type="submit"
+          className="bg-red-600 hover:bg-red-700 px-6 py-2 rounded-lg font-semibold transition duration-200"
+        >
+          Registrar salida
+        </button>
+      </div>
 
-      {error && <p className="text-red-500">{error}</p>}
-      {success && <p className="text-green-500">{success}</p>}
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+      {success && <p className="text-green-500 text-sm">{success}</p>}
     </form>
   )
 }

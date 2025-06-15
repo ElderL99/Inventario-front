@@ -21,13 +21,25 @@ export default function DashboardPage() {
       .catch(err => console.error('Error al cargar resumen:', err))
   }, [token, refresh])
 
-  if (!resumen) return <p className="text-white">Cargando resumen...</p>
+  if (!resumen) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#1a1a1a] ">
+        <p className="text-gray-300 text-lg font-medium">Cargando resumen...</p>
+      </div>
+    )
+  }
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
-      <DashboardSummary totals={resumen} />
-      <ProductTable onSuccess={handleSuccess} />
-    </div>
+    <main className="w-full h-full bg-[#1a1a1a] px-4 py-6 overflow-x-hidden md:w- lg:w-full h-full">
+
+      <div className="">
+        <h1 className="text-2xl font-bold text-white text-center sm:text-left">
+          Dashboard
+        </h1>
+
+        <DashboardSummary totals={resumen} />
+        <ProductTable onSuccess={handleSuccess} />
+      </div>
+    </main>
   )
 }

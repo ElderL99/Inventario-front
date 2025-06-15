@@ -13,6 +13,7 @@ export default function ProductForm({ onSuccess, product }) {
     location: '',
     quantity: '',
   })
+
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
@@ -76,58 +77,66 @@ export default function ProductForm({ onSuccess, product }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 text-sm">
-      <input
-        name="name"
-        value={form.name}
-        onChange={handleChange}
-        placeholder="Nombre"
-        className="w-full bg-[#1e1e1e] p-2 rounded border border-gray-700"
-        required
-      />
-      <input
-        name="description"
-        value={form.description}
-        onChange={handleChange}
-        placeholder="Descripción"
-        className="w-full bg-[#1e1e1e] p-2 rounded border border-gray-700"
-        required
-      />
-      <input
-        name="category"
-        value={form.category}
-        onChange={handleChange}
-        placeholder="Categoría"
-        className="w-full bg-[#1e1e1e] p-2 rounded border border-gray-700"
-        required
-      />
-      <input
-        name="location"
-        value={form.location}
-        onChange={handleChange}
-        placeholder="Ubicación"
-        className="w-full bg-[#1e1e1e] p-2 rounded border border-gray-700"
-        required
-      />
-      <input
-        name="quantity"
-        type="number"
-        value={form.quantity}
-        onChange={handleChange}
-        min="0"
-        className="w-full bg-[#1e1e1e] p-2 rounded border border-gray-700"
-        required
-      />
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-4 bg-[#222] p-6 rounded-lg shadow-lg text-white"
+    >
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <input
+          name="name"
+          value={form.name}
+          onChange={handleChange}
+          placeholder="Nombre"
+          className="bg-[#1e1e1e] p-2 rounded border border-gray-700"
+          required
+        />
+        <input
+          name="description"
+          value={form.description}
+          onChange={handleChange}
+          placeholder="Descripción"
+          className="bg-[#1e1e1e] p-2 rounded border border-gray-700"
+          required
+        />
+        <input
+          name="category"
+          value={form.category}
+          onChange={handleChange}
+          placeholder="Categoría"
+          className="bg-[#1e1e1e] p-2 rounded border border-gray-700"
+          required
+        />
+        <input
+          name="location"
+          value={form.location}
+          onChange={handleChange}
+          placeholder="Ubicación"
+          className="bg-[#1e1e1e] p-2 rounded border border-gray-700"
+          required
+        />
+        <input
+          name="quantity"
+          type="number"
+          value={form.quantity}
+          onChange={handleChange}
+          min="0"
+          placeholder="Cantidad"
+          className="bg-[#1e1e1e] p-2 rounded border border-gray-700"
+          required
+        />
+      </div>
 
-      <button
-        type="submit"
-        className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white font-medium"
-      >
-        {isEdit ? 'Actualizar producto' : 'Agregar producto'}
-      </button>
+      <div className="flex justify-end">
+        <button
+          type="submit"
+          className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded text-white font-semibold transition duration-200"
+        >
+          {isEdit ? 'Actualizar producto' : 'Agregar producto'}
+        </button>
+      </div>
 
-      {error && <p className="text-red-500">{error}</p>}
-      {success && <p className="text-green-500">{success}</p>}
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+      {success && <p className="text-green-500 text-sm">{success}</p>}
     </form>
   )
 }

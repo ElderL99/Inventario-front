@@ -11,7 +11,6 @@ export default function ProductTable({ onSuccess }) {
 
   const [searchTerm, setSearchTerm] = useState('')
   const [category, setCategory] = useState('')
-
   const [productos, setProductos] = useState([])
   const [showForm, setShowForm] = useState(false)
   const [editingProduct, setEditingProduct] = useState(null)
@@ -22,9 +21,7 @@ export default function ProductTable({ onSuccess }) {
     if (searchTerm) url.searchParams.append('name', searchTerm)
     if (category) url.searchParams.append('category', category)
 
-    fetch(url, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
+    fetch(url, { headers: { Authorization: `Bearer ${token}` } })
       .then(res => {
         if (!res.ok) throw new Error()
         return res.json()
@@ -36,7 +33,6 @@ export default function ProductTable({ onSuccess }) {
       .catch(() => setError('Error al cargar productos'))
   }
 
-
   useEffect(() => {
     if (token) fetchProducts()
   }, [searchTerm, category, token])
@@ -47,8 +43,7 @@ export default function ProductTable({ onSuccess }) {
   }
 
   const handleDelete = async (id) => {
-    const confirmDelete = confirm('¿Seguro que quieres eliminar este producto?')
-    if (!confirmDelete) return
+    if (!confirm('¿Seguro que quieres eliminar este producto?')) return
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${id}`, {
@@ -64,49 +59,48 @@ export default function ProductTable({ onSuccess }) {
   }
 
   return (
-    <div className="mt-6">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Inventario</h2>
-        {isAdmin && (
-          <button
-            onClick={() => {
-              setShowForm(!showForm)
-              setEditingProduct(null)
-            }}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
-          >
-            {showForm ? 'Cerrar' : '+ Add Item'}
-          </button>
-        )}
+    <div className="mt-6 text-white">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
+        <h2 className="text-xl font-bold">Inventario</h2>
 
-         {productos.length > 0 && (
-        <div className="mb-4 flex justify-end">
-          <button
-            onClick={() => exportProductsToExcel(productos)}
-            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
-          >
-            Exportar a Excel
-          </button>
+        <div className="flex flex-wrap gap-2">
+          {isAdmin && (
+            <button
+              onClick={() => {
+                setShowForm(!showForm)
+                setEditingProduct(null)
+              }}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+            >
+              {showForm ? 'Cerrar' : '+ Agregar Producto'}
+            </button>
+          )}
+
+          {productos.length > 0 && (
+            <button
+              onClick={() => exportProductsToExcel(productos)}
+              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
+            >
+              Exportar a Excel
+            </button>
+          )}
         </div>
-      )}
       </div>
-     
 
-
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className="flex flex-wrap gap-3 mb-6">
         <input
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Buscar por nombre"
-          className="bg-[#1e1e1e] p-2 rounded border border-gray-700 text-sm"
+          className="bg-[#1e1e1e] p-2 rounded border border-gray-700 text-sm text-white w-full sm:w-auto"
         />
         <input
           type="text"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           placeholder="Categoría"
-          className="bg-[#1e1e1e] p-2 rounded border border-gray-700 text-sm"
+          className="bg-[#1e1e1e] p-2 rounded border border-gray-700 text-sm text-white w-full sm:w-auto"
         />
       </div>
 
@@ -121,14 +115,13 @@ export default function ProductTable({ onSuccess }) {
               if (onSuccess) onSuccess()
             }}
           />
-
         </div>
       )}
 
       {error && <p className="text-red-500">{error}</p>}
 
       <div className="overflow-x-auto rounded-md bg-[#222]">
-        <table className="w-full table-auto text-sm text-left text-white">
+        <table className="w-full text-sm text-left text-white table-auto">
           <thead className="bg-[#333] uppercase text-xs text-gray-400">
             <tr>
               <th className="px-4 py-3">Nombre</th>
@@ -146,8 +139,6 @@ export default function ProductTable({ onSuccess }) {
                 <td className="px-4 py-2">{prod.category}</td>
                 <td className="px-4 py-2">{prod.location}</td>
                 <td className="px-4 py-2">{prod.quantity}</td>
-
-                {/* ✅ este td es único y válido */}
                 <td className="px-4 py-2">
                   {prod.quantity <= 0 ? (
                     <span className="text-red-400">Agotado</span>
@@ -157,26 +148,18 @@ export default function ProductTable({ onSuccess }) {
                     <span className="text-green-400">Disponible</span>
                   )}
                 </td>
-
                 {isAdmin && (
                   <td className="px-4 py-2 flex gap-2">
-                    <button
-                      onClick={() => handleEdit(prod)}
-                      className="text-blue-400 hover:text-blue-200"
-                    >
+                    <button onClick={() => handleEdit(prod)} className="text-blue-400 hover:text-blue-200">
                       <Pencil size={18} />
                     </button>
-                    <button
-                      onClick={() => handleDelete(prod._id)}
-                      className="text-red-400 hover:text-red-200"
-                    >
+                    <button onClick={() => handleDelete(prod._id)} className="text-red-400 hover:text-red-200">
                       <Trash2 size={18} />
                     </button>
                   </td>
                 )}
               </tr>
             ))}
-
           </tbody>
         </table>
       </div>
