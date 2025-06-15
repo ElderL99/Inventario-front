@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '@/context/AuthContext'
 import ProductForm from '@/components/forms/ProductForm'
 import { Pencil, Trash2 } from 'lucide-react'
+import { exportProductsToExcel } from '@/utils/exportToExcel'
 
 export default function ProductTable({ onSuccess }) {
   const { token, user } = useAuth()
@@ -77,7 +78,20 @@ export default function ProductTable({ onSuccess }) {
             {showForm ? 'Cerrar' : '+ Add Item'}
           </button>
         )}
+
+         {productos.length > 0 && (
+        <div className="mb-4 flex justify-end">
+          <button
+            onClick={() => exportProductsToExcel(productos)}
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+          >
+            Exportar a Excel
+          </button>
+        </div>
+      )}
       </div>
+     
+
 
       <div className="flex flex-wrap gap-2 mb-4">
         <input
