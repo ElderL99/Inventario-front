@@ -1,12 +1,13 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '@/context/AuthContext'
 import ProductForm from '@/components/forms/ProductForm'
 import { Pencil, Trash2 } from 'lucide-react'
 
-export default function ProductTable() {
+export default function ProductTable({ onSuccess }) {
   const { token, user } = useAuth()
   const isAdmin = user?.role === 'admin'
+
   const [searchTerm, setSearchTerm] = useState('')
   const [category, setCategory] = useState('')
 
@@ -16,19 +17,28 @@ export default function ProductTable() {
   const [error, setError] = useState('')
 
   const fetchProducts = () => {
-  const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/api/products/search`)
-  if (searchTerm) url.searchParams.append('name', searchTerm)
-  if (category) url.searchParams.append('category', category)
+    const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/api/products/search`)
+    if (searchTerm) url.searchParams.append('name', searchTerm)
+    if (category) url.searchParams.append('category', category)
 
-  fetch(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-    .then(res => res.json())
-    .then(data => setProductos(data))
-    .catch(() => setError('Error al cargar productos'))
-}
+    fetch(url, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(res => {
+        if (!res.ok) throw new Error()
+        return res.json()
+      })
+      .then(data => {
+        setProductos(data)
+        if (onSuccess) onSuccess()
+      })
+      .catch(() => setError('Error al cargar productos'))
+  }
+
+
+  useEffect(() => {
+    if (token) fetchProducts()
+  }, [searchTerm, category, token])
 
   const handleEdit = (product) => {
     setEditingProduct(product)
@@ -42,21 +52,15 @@ export default function ProductTable() {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${id}`, {
         method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` }
       })
 
       if (!res.ok) throw new Error()
       fetchProducts()
     } catch (err) {
-      setError('Error al eliminar el producto')
+      alert('Error al eliminar el producto')
     }
   }
-
-  useEffect(() => {
-    if (token) fetchProducts()
-  }, [token])
 
   return (
     <div className="mt-6">
@@ -74,40 +78,36 @@ export default function ProductTable() {
           </button>
         )}
       </div>
-      <div className="flex flex-wrap gap-2 mb-4">
-  <input
-    type="text"
-    value={searchTerm}
-    onChange={(e) => setSearchTerm(e.target.value)}
-    placeholder="Buscar por nombre"
-    className="bg-[#1e1e1e] p-2 rounded border border-gray-700 text-sm"
-  />
-  <input
-    type="text"
-    value={category}
-    onChange={(e) => setCategory(e.target.value)}
-    placeholder="Categoría"
-    className="bg-[#1e1e1e] p-2 rounded border border-gray-700 text-sm"
-  />
-  <button
-    onClick={fetchProducts}
-    className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded text-sm"
-  >
-    Buscar
-  </button>
-</div>
 
+      <div className="flex flex-wrap gap-2 mb-4">
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Buscar por nombre"
+          className="bg-[#1e1e1e] p-2 rounded border border-gray-700 text-sm"
+        />
+        <input
+          type="text"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          placeholder="Categoría"
+          className="bg-[#1e1e1e] p-2 rounded border border-gray-700 text-sm"
+        />
+      </div>
 
       {showForm && isAdmin && (
         <div className="mb-6">
           <ProductForm
             product={editingProduct}
             onSuccess={() => {
-              fetchProducts()
               setEditingProduct(null)
               setShowForm(false)
+              fetchProducts()
+              if (onSuccess) onSuccess()
             }}
           />
+
         </div>
       )}
 
@@ -132,27 +132,37 @@ export default function ProductTable() {
                 <td className="px-4 py-2">{prod.category}</td>
                 <td className="px-4 py-2">{prod.location}</td>
                 <td className="px-4 py-2">{prod.quantity}</td>
+
+                {/* ✅ este td es único y válido */}
                 <td className="px-4 py-2">
-                  {prod.quantity === 0 ? (
+                  {prod.quantity <= 0 ? (
                     <span className="text-red-400">Agotado</span>
-                  ) : prod.quantity <= 10 ? (
+                  ) : prod.quantity <= 200 ? (
                     <span className="text-yellow-400">Bajo</span>
                   ) : (
                     <span className="text-green-400">Disponible</span>
                   )}
                 </td>
+
                 {isAdmin && (
                   <td className="px-4 py-2 flex gap-2">
-                    <button onClick={() => handleEdit(prod)} className="text-blue-400 hover:text-blue-200">
+                    <button
+                      onClick={() => handleEdit(prod)}
+                      className="text-blue-400 hover:text-blue-200"
+                    >
                       <Pencil size={18} />
                     </button>
-                    <button onClick={() => handleDelete(prod._id)} className="text-red-400 hover:text-red-200">
+                    <button
+                      onClick={() => handleDelete(prod._id)}
+                      className="text-red-400 hover:text-red-200"
+                    >
                       <Trash2 size={18} />
                     </button>
                   </td>
                 )}
               </tr>
             ))}
+
           </tbody>
         </table>
       </div>
