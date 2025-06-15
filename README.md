@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🧾 Inventario Web - Sistema de Gestión de Productos
 
-## Getting Started
+Este proyecto es una aplicación completa para la gestión de productos, entradas y salidas de inventario. Está compuesto por un backend en Express + MongoDB y un frontend en Next.js con Tailwind CSS. Ideal para almacenes, negocios u oficinas que requieren control de stock.
 
-First, run the development server:
+---
+
+## 🚀 Tecnologías
+
+### Frontend
+- [Next.js 14](https://nextjs.org/)
+- [React](https://reactjs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- Context API para autenticación (JWT)
+- Hooks personalizados
+
+### Backend
+- [Express.js](https://expressjs.com/)
+- [MongoDB + Mongoose](https://mongoosejs.com/)
+- JSON Web Tokens (JWT)
+- Arquitectura limpia (controllers, usecases, models, routes, middleware)
+
+---
+
+## 🔗 Enlaces
+
+- 🔧 API en producción: [`https://inventario-back-nine.vercel.app`](https://inventario-back-nine.vercel.app)
+- 📁 Backend repo: [`github.com/ElderL99/inventario-back`](https://github.com/ElderL99/inventario-back)
+- 📁 Frontend repo: [`github.com/ElderL99/inventario-front`](https://github.com/ElderL99/inventario-front)
+
+---
+
+## ✨ Funcionalidades
+
+- ✅ Registro e inicio de sesión con roles (admin / usuario)
+- ✅ CRUD de productos (nombre, categoría, cantidad, ubicación, estado)
+- ✅ Registro de entradas (aumenta stock)
+- ✅ Registro de salidas (disminuye stock con validación de cantidad disponible)
+- ✅ Estado visual del stock: disponible, bajo, agotado
+- ✅ Historial de movimientos (entradas y salidas)
+- ✅ Filtro por nombre o categoría
+- ✅ Responsive y mobile-first con Tailwind
+
+---
+
+## 🧪 Cómo correr el proyecto localmente
+
+### Backend
 
 ```bash
+git clone https://github.com/ElderL99/inventario-back.git
+cd inventario-back
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+🧑‍💻 Autor
+Adán Lugo (ElderL9)
+📧 adan.lugo.barrientos@outlook.com
+🔗 GitHub
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+🛡️ Licencia
+Este proyecto está bajo la Licencia MIT. Puedes usarlo y adaptarlo libremente.
