@@ -50,19 +50,20 @@ export default function ProductosPage() {
                 Estado:{' '}
                 <span
                   className={
-                    p.quantity <= 0
+                    p.quantity === 0
                       ? 'text-red-400'
                       : p.quantity <= 200
-                      ? 'text-yellow-400'
-                      : 'text-green-400'
+                        ? 'text-yellow-400'
+                        : 'text-green-400'
                   }
                 >
-                  {p.quantity <= 0
+                  {p.quantity === 0
                     ? 'Agotado'
                     : p.quantity <= 200
-                    ? 'Bajo'
-                    : 'Disponible'} ({p.quantity})
+                      ? 'Bajo'
+                      : 'Disponible'} ({p.quantity})
                 </span>
+
               </p>
             </div>
           ))}
