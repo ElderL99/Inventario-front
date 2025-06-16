@@ -18,6 +18,7 @@ export default function LoginForm() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
+        credentials: 'include' 
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.message || 'Error al iniciar sesión')
