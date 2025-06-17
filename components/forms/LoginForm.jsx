@@ -45,7 +45,7 @@ export default function LoginForm() {
           <input
             type="email"
             placeholder="correo@ejemplo.com"
-            className="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
+            className="mt-1 text-gray-700 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -57,7 +57,7 @@ export default function LoginForm() {
           <input
             type="password"
             placeholder="••••••••"
-            className="mt-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
+            className="mt-1 text-gray-700 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
