@@ -9,6 +9,7 @@ import {
   FilePlus2,
   FileMinus2,
   LogOut,
+  Settings,
 } from 'lucide-react'
 
 import { useAuth } from '@/context/AuthContext'
@@ -18,6 +19,7 @@ const navItems = [
   { label: 'Inventario', icon: <Boxes size={18} />, href: '/dashboard/productos' },
   { label: 'Entradas', icon: <FilePlus2 size={18} />, href: '/dashboard/entradas' },
   { label: 'Salidas', icon: <FileMinus2 size={18} />, href: '/dashboard/salidas' },
+  { label: 'Configuración', icon: <Settings size={18} />, href: '/dashboard/configuracion' },
 ]
 
 export default function Sidebar() {
